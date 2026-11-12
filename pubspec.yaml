@@ -1,0 +1,63 @@
+name: spot_finder
+description: "SpotFinder — Premium Location Discovery & Place Finder Application."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management & DI
+  flutter_riverpod: ^2.6.1
+
+  # Declarative Navigation & Deep Linking
+  go_router: ^14.8.1
+
+  # HTTP Networking & REST API Client
+  dio: ^5.8.0+1
+
+  # Interactive Mapping & OpenStreetMap Display
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+
+  # Location Services & GPS
+  geolocator: ^13.0.2
+  permission_handler: ^11.3.1
+
+  # Local Persistence & Secure Storage
+  shared_preferences: ^2.3.5
+  flutter_secure_storage: ^9.2.4
+
+  # Device Intents: Directions, Dialing, Browser, Share
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.4
+
+  # Google AdMob Monetization (Official SDK)
+  google_mobile_ads: ^9.2.0
+
+  # Image Caching & Visual Assets
+  cached_network_image: ^3.4.1
+  cupertino_icons: ^1.0.8
+
+  # Internationalization & Formatting
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  uuid: ^4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/

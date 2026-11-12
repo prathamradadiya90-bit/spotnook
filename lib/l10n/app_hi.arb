@@ -1,0 +1,34 @@
+{
+  "@@locale": "hi",
+  "appName": "स्पॉटफाइंडर",
+  "exploreSpots": "स्थान खोजें",
+  "searchHint": "कैफे, रेस्तरां, होटल खोजें...",
+  "trendingNearby": "आस-पास के लोकप्रिय स्थान",
+  "viewOnMap": "नक्शे पर देखें",
+  "topDiscoveries": "शीर्ष रेटेड स्थान",
+  "recentlyViewed": "हाल ही में देखे गए स्थान",
+  "directions": "दिशा-निर्देश",
+  "call": "कॉल करें",
+  "website": "वेबसाइट",
+  "save": "सहेजें",
+  "saved": "सहेजा गया",
+  "share": "साझा करें",
+  "openNow": "अभी खुला है",
+  "closed": "बंद है",
+  "searchThisArea": "इस क्षेत्र में खोजें",
+  "retry": "पुनः प्रयास करें",
+  "offlineSavedAgo": "{minutes} मिनट पहले सहेजा गया",
+  "@offlineSavedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotLoadPlaces": "स्थान लोड नहीं किए जा सके। अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें",
+  "settings": "सेटिंग्स",
+  "themeMode": "थीम मोड",
+  "deleteAllData": "मेरा सारा डेटा हटाएं",
+  "privacyPolicy": "गोपनीयता नीति"
+}
+

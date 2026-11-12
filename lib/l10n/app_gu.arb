@@ -1,0 +1,34 @@
+{
+  "@@locale": "gu",
+  "appName": "સ્પોટફાઈન્ડર",
+  "exploreSpots": "સ્થળો શોધો",
+  "searchHint": "કાફે, રેસ્ટોરન્ટ્સ, હોટેલો શોધો...",
+  "trendingNearby": "નજીકના લોકપ્રિય સ્થળો",
+  "viewOnMap": "નકશા પર જુઓ",
+  "topDiscoveries": "શ્રેષ્ઠ સ્થળો",
+  "recentlyViewed": "હાલમાં જોયેલા સ્થળો",
+  "directions": "દિશાઓ",
+  "call": "કોલ કરો",
+  "website": "વેબસાઇટ",
+  "save": "સાચવો",
+  "saved": "સાચવેલ",
+  "share": "શેર કરો",
+  "openNow": "હમણાં ખુલ્લું છે",
+  "closed": "બંધ છે",
+  "searchThisArea": "આ વિસ્તારમાં શોધો",
+  "retry": "ફરી પ્રયાસ કરો",
+  "offlineSavedAgo": "{minutes} મિનિટ પહેલાં સાચવેલ",
+  "@offlineSavedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotLoadPlaces": "સ્થળો લોડ કરી શકાયા નથી. તમારું ઇન્ટરનેટ કનેક્શન તપાસો અને ફરી પ્રયાસ કરો",
+  "settings": "સેટિંગ્સ",
+  "themeMode": "થીમ મોડ",
+  "deleteAllData": "મારો બધો ડેટા ડિલીટ કરો",
+  "privacyPolicy": "પ્રાઇવસી પોલિસી"
+}
+

@@ -1,0 +1,7 @@
+- generic [ref=e1] [cursor=pointer]:
+  - button "Enable accessibility" [ref=e2]
+  - generic [active] [ref=e5]:
+    - generic:
+      - generic:
+        - textbox "Search places in Surat..."
+        - button "Submit"

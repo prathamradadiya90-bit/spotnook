@@ -1,0 +1,34 @@
+{
+  "@@locale": "en",
+  "appName": "SpotFinder",
+  "exploreSpots": "Explore Spots",
+  "searchHint": "Search cafes, restaurants, hotels...",
+  "trendingNearby": "Trending Nearby",
+  "viewOnMap": "View on Map",
+  "topDiscoveries": "Top Rated Discoveries",
+  "recentlyViewed": "Recently Viewed",
+  "directions": "Directions",
+  "call": "Call",
+  "website": "Website",
+  "save": "Save",
+  "saved": "Saved",
+  "share": "Share",
+  "openNow": "Open Now",
+  "closed": "Closed",
+  "searchThisArea": "Search this area",
+  "retry": "Retry",
+  "offlineSavedAgo": "Saved {minutes} min ago",
+  "@offlineSavedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "couldNotLoadPlaces": "Couldn't load places. Check your connection and retry",
+  "settings": "Settings",
+  "themeMode": "Theme Mode",
+  "deleteAllData": "Delete All My Data",
+  "privacyPolicy": "Privacy Policy"
+}
+
