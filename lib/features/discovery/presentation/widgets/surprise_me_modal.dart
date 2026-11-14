@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_decorations.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -154,7 +153,6 @@ class _SurpriseMeModalState extends State<SurpriseMeModal> {
           if (_currentPick != null) ...[
             Builder(
               builder: (context) {
-                final photoUrl = _currentPick!.photoUrls.isNotEmpty ? _currentPick!.photoUrls.first : null;
                 final rating = _currentPick!.rating ?? RatingHelper.generateRating(_currentPick!.id, _currentPick!.name, categoryId: _currentPick!.categoryId);
 
                 return AnimatedContainer(
@@ -174,20 +172,20 @@ class _SurpriseMeModalState extends State<SurpriseMeModal> {
                   ),
                   child: Row(
                     children: [
-                      // Photo Thumbnail
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          width: 76,
-                          height: 76,
-                          color: Colors.grey.withOpacity(0.2),
-                          child: photoUrl != null
-                              ? CachedNetworkImage(
-                                  imageUrl: photoUrl,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (_, _, _) => const Icon(Icons.place_rounded),
-                                )
-                              : const Icon(Icons.place_rounded),
+                      // Category Avatar
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            _currentPick!.category.icon,
+                            color: isDark ? AppColors.primaryLight : AppColors.primary,
+                            size: 24,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 14),

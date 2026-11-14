@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/navigation_service.dart';
@@ -11,10 +10,10 @@ import '../../../place_detail/presentation/providers/user_ratings_provider.dart'
 import '../../../saved/presentation/providers/saved_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../domain/entities/place.dart';
-import 'category_illustration_widget.dart';
 import 'rating_badge.dart';
 
-/// Compact card used in horizontal discovery carousels and map preview overlays.
+/// Compact card used in horizontal discovery carousels.
+/// Renders a fast, clean, image-free card with clear typography and quick actions.
 class PlaceCompactCard extends ConsumerWidget {
   final Place place;
   final VoidCallback? onTap;
@@ -24,7 +23,7 @@ class PlaceCompactCard extends ConsumerWidget {
     super.key,
     required this.place,
     this.onTap,
-    this.width = 240,
+    this.width = 230,
   });
 
   @override
@@ -41,7 +40,6 @@ class PlaceCompactCard extends ConsumerWidget {
     final displayReviewCount = userRating != null ? baseReviews + 1 : baseReviews;
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final useMiles = ref.watch(settingsProvider).useMiles;
-    final imageUrl = place.primaryImageUrl;
 
     return Container(
       width: width,
@@ -52,206 +50,149 @@ class PlaceCompactCard extends ConsumerWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: AppDecorations.borderRadiusMedium,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Image Header with Distance & Bookmark
-              SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Stack(
-                  fit: StackFit.expand,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Category Pill & Bookmark
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (imageUrl.isNotEmpty)
-                      CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        memCacheWidth: 480,
-                        placeholder: (_, _) => Container(
-                          color: isDark ? AppColors.surfaceDarkVariant : AppColors.surfaceLightVariant,
-                          child: const Center(
-                            child: SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          ),
-                        ),
-                        errorWidget: (_, _, _) => CategoryIllustrationWidget(
-                          category: place.category,
-                          placeName: place.name,
-                          compact: true,
-                        ),
-                      )
-                    else
-                      CategoryIllustrationWidget(
-                        category: place.category,
-                        placeName: place.name,
-                        compact: true,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                    // Distance Tag Top-Left
-                    if (place.distanceInMeters != null)
-                      Positioned(
-                        top: 8,
-                        left: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.65),
-                            borderRadius: BorderRadius.circular(6),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            place.category.icon,
+                            size: 13,
+                            color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.near_me, size: 11, color: Colors.white),
-                              const SizedBox(width: 3),
-                              Text(
-                                DistanceCalculator.formatDistance(place.distanceInMeters!, useMiles: useMiles),
-                                style: AppTypography.labelSmall.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    // Bookmark Top-Right
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: InkWell(
-                        onTap: () {
-                          ref.read(bookmarksProvider.notifier).toggle(place);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.55),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                            size: 16,
-                            color: isBookmarked ? AppColors.heartRose : Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Open/Closed Tag Bottom-Right of Image
-                    if (place.isOpenNow != null)
-                      Positioned(
-                        bottom: 6,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: (place.isOpenNow! ? AppColors.statusOpen : AppColors.statusClosed).withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            place.isOpenNow! ? 'Open' : 'Closed',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-
-              // Details Body
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Category & Rating
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                          decoration: BoxDecoration(
-                            color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
+                          const SizedBox(width: 4),
+                          Text(
                             place.category.name,
                             style: AppTypography.labelSmall.copyWith(
                               color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
                               fontWeight: FontWeight.w700,
                               fontSize: 11,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        RatingBadge(
-                          rating: displayRating,
-                          reviewCount: displayReviewCount,
-                          showReviews: false,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-
-                    // Name
-                    Text(
-                      place.name,
-                      style: AppTypography.titleSmall.copyWith(
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                        fontWeight: FontWeight.w700,
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 3),
-
-                    // Address
-                    Text(
-                      place.formattedAddress,
-                      style: AppTypography.bodySmall.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Quick Directions Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 34,
-                      child: FilledButton.tonalIcon(
-                        onPressed: () {
-                          const NavigationService().launchDirections(
-                            latitude: place.latitude,
-                            longitude: place.longitude,
-                            placeName: place.name,
-                          );
-                        },
-                        icon: const Icon(Icons.near_me_rounded, size: 14),
-                        label: const Text('Directions'),
-                        style: FilledButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          textStyle: AppTypography.labelSmall.copyWith(fontWeight: FontWeight.w700),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                    InkWell(
+                      onTap: () {
+                        ref.read(bookmarksProvider.notifier).toggle(place);
+                      },
+                      borderRadius: BorderRadius.circular(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3),
+                        child: Icon(
+                          isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                          size: 18,
+                          color: isBookmarked ? AppColors.heartRose : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+
+                // Name
+                Text(
+                  place.name,
+                  style: AppTypography.titleSmall.copyWith(
+                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+
+                // Rating & Distance Row
+                Row(
+                  children: [
+                    RatingBadge(
+                      rating: displayRating,
+                      reviewCount: displayReviewCount,
+                      showReviews: false,
+                    ),
+                    if (place.distanceInMeters != null) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        '•',
+                        style: TextStyle(
+                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                          fontSize: 10,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Icon(
+                        Icons.near_me_outlined,
+                        size: 11,
+                        color: isDark ? AppColors.primaryLight : AppColors.primary,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        DistanceCalculator.formatDistance(place.distanceInMeters!, useMiles: useMiles),
+                        style: AppTypography.labelSmall.copyWith(
+                          color: isDark ? AppColors.primaryLight : AppColors.primary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 6),
+
+                // Address
+                Text(
+                  place.formattedAddress,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                    fontSize: 11,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 10),
+
+                // Directions Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 32,
+                  child: FilledButton.tonalIcon(
+                    onPressed: () {
+                      const NavigationService().launchDirections(
+                        latitude: place.latitude,
+                        longitude: place.longitude,
+                        placeName: place.name,
+                      );
+                    },
+                    icon: const Icon(Icons.near_me_rounded, size: 13),
+                    label: const Text('Directions'),
+                    style: FilledButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      textStyle: AppTypography.labelSmall.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 11,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

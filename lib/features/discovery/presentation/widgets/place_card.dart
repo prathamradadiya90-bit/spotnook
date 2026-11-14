@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -11,10 +10,11 @@ import '../../../place_detail/presentation/providers/user_ratings_provider.dart'
 import '../../../saved/presentation/providers/saved_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../domain/entities/place.dart';
-import 'category_illustration_widget.dart';
 import 'rating_badge.dart';
 
 /// Venue item card in discovery results list.
+/// Renders a fast, clean, image-free list item prioritizing typography, rating,
+/// distance, and quick interactions.
 class PlaceCard extends ConsumerWidget {
   final Place place;
   final VoidCallback? onTap;
@@ -40,10 +40,8 @@ class PlaceCard extends ConsumerWidget {
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final useMiles = ref.watch(settingsProvider).useMiles;
 
-    final imageUrl = place.primaryImageUrl;
-
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: AppDecorations.cardDecoration(context),
       child: Material(
         color: Colors.transparent,
@@ -51,47 +49,23 @@ class PlaceCard extends ConsumerWidget {
           onTap: onTap,
           borderRadius: AppDecorations.borderRadiusMedium,
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Hero Image with Category Badge
-                ClipRRect(
-                  borderRadius: AppDecorations.borderRadiusSmall,
-                  child: SizedBox(
-                    width: 104,
-                    height: 104,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        if (imageUrl.isNotEmpty)
-                          CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            memCacheWidth: 208,
-                            placeholder: (_, _) => Container(
-                              color: isDark ? AppColors.surfaceDarkVariant : AppColors.surfaceLightVariant,
-                              child: const Center(
-                                child: SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                ),
-                              ),
-                            ),
-                            errorWidget: (_, _, _) => CategoryIllustrationWidget(
-                              category: place.category,
-                              placeName: place.name,
-                              compact: true,
-                            ),
-                          )
-                        else
-                          CategoryIllustrationWidget(
-                            category: place.category,
-                            placeName: place.name,
-                            compact: true,
-                          ),
-                      ],
+                // Category Icon Avatar
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      place.category.icon,
+                      color: isDark ? AppColors.primaryLight : AppColors.primary,
+                      size: 22,
                     ),
                   ),
                 ),
@@ -101,73 +75,24 @@ class PlaceCard extends ConsumerWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Category Tag & Bookmark
+                      // Venue Name & Open/Closed Badge
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
+                          Expanded(
                             child: Text(
-                              place.category.name,
-                              style: AppTypography.labelSmall.copyWith(
-                                color: isDark ? AppColors.primaryLight : AppColors.primary,
+                              place.name,
+                              style: AppTypography.titleSmall.copyWith(
+                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                                 fontWeight: FontWeight.w700,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              ref.read(bookmarksProvider.notifier).toggle(place);
-                            },
-                            borderRadius: BorderRadius.circular(16),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4),
-                              child: Icon(
-                                isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                                size: 20,
-                                color: isBookmarked ? AppColors.heartRose : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-
-                      // Name
-                      Text(
-                        place.name,
-                        style: AppTypography.titleMedium.copyWith(
-                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-
-                      // Rating & Price Level
-                      Row(
-                        children: [
-                          RatingBadge(
-                            rating: displayRating,
-                            reviewCount: displayReviewCount,
-                          ),
-                          const SizedBox(width: 8),
-                          if (place.priceLevel != null) ...[
-                            Text(
-                              Formatters.formatPriceLevel(place.priceLevel),
-                              style: AppTypography.labelMedium.copyWith(
-                                color: AppColors.statusOpen,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                          if (place.isOpenNow != null)
+                          if (place.isOpenNow != null) ...[
+                            const SizedBox(width: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
@@ -179,12 +104,51 @@ class PlaceCard extends ConsumerWidget {
                                 style: AppTypography.labelSmall.copyWith(
                                   color: place.isOpenNow! ? AppColors.statusOpen : AppColors.statusClosed,
                                   fontWeight: FontWeight.w700,
+                                  fontSize: 10,
                                 ),
                               ),
                             ),
+                          ],
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
+
+                      // Rating & Category & Price
+                      Row(
+                        children: [
+                          RatingBadge(
+                            rating: displayRating,
+                            reviewCount: displayReviewCount,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            place.category.name,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: isDark ? AppColors.primaryLight : AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                          if (place.priceLevel != null) ...[
+                            const SizedBox(width: 6),
+                            Text(
+                              '•',
+                              style: AppTypography.bodySmall.copyWith(
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              Formatters.formatPriceLevel(place.priceLevel),
+                              style: AppTypography.labelSmall.copyWith(
+                                color: AppColors.statusOpen,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 4),
 
                       // Distance & Address
                       Row(
@@ -226,6 +190,22 @@ class PlaceCard extends ConsumerWidget {
                       ),
                     ],
                   ),
+                ),
+
+                const SizedBox(width: 6),
+
+                // Bookmark Icon Button
+                IconButton(
+                  onPressed: () {
+                    ref.read(bookmarksProvider.notifier).toggle(place);
+                  },
+                  icon: Icon(
+                    isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                    size: 22,
+                    color: isBookmarked ? AppColors.heartRose : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
+                  ),
+                  splashRadius: 20,
+                  tooltip: isBookmarked ? 'Remove bookmark' : 'Bookmark place',
                 ),
               ],
             ),

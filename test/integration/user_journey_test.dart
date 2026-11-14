@@ -83,7 +83,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 200));
 
     // 4. Verify detail elements
-    expect(find.text('Honest Roasters Cafe'), findsOneWidget);
+    expect(find.text('Honest Roasters Cafe'), findsAtLeastNWidgets(1));
     expect(find.text('123 Ring Road, Surat'), findsOneWidget);
     expect(find.text('Directions'), findsOneWidget);
     expect(find.text('Save'), findsOneWidget);

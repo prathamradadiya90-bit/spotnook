@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/navigation_service.dart';
@@ -8,7 +7,6 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/distance_calculator.dart';
 import '../../../../core/utils/rating_helper.dart';
 import '../../../discovery/domain/entities/place.dart';
-import '../../../discovery/presentation/widgets/category_illustration_widget.dart';
 import '../../../discovery/presentation/widgets/rating_badge.dart';
 import '../../../place_detail/presentation/providers/user_ratings_provider.dart';
 import '../../../saved/presentation/providers/saved_provider.dart';
@@ -41,7 +39,6 @@ class MapPreviewSheet extends ConsumerWidget {
     final displayReviewCount = userRating != null ? baseReviews + 1 : baseReviews;
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final useMiles = ref.watch(settingsProvider).useMiles;
-    final imageUrl = place.primaryImageUrl;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -63,32 +60,23 @@ class MapPreviewSheet extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top row with image, info, close button
+                // Top row with category icon, info, close button
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: AppDecorations.borderRadiusSmall,
-                      child: SizedBox(
-                        width: 76,
-                        height: 76,
-                        child: imageUrl.isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: imageUrl,
-                                fit: BoxFit.cover,
-                                memCacheWidth: 152,
-                                placeholder: (_, _) => Container(
-                                  color: isDark ? AppColors.surfaceDarkVariant : AppColors.surfaceLightVariant,
-                                ),
-                                errorWidget: (_, _, _) => CategoryIllustrationWidget(
-                                  category: place.category,
-                                  compact: true,
-                                ),
-                              )
-                            : CategoryIllustrationWidget(
-                                category: place.category,
-                                compact: true,
-                              ),
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          place.category.icon,
+                          color: isDark ? AppColors.primaryLight : AppColors.primary,
+                          size: 22,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),

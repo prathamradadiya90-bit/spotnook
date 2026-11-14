@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -15,7 +14,6 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/rating_helper.dart';
 import '../../../discovery/domain/entities/place.dart';
 import '../../../discovery/presentation/widgets/ad_banner_widget.dart';
-import '../../../discovery/presentation/widgets/category_illustration_widget.dart';
 import '../../../discovery/presentation/widgets/rating_badge.dart';
 import '../../../saved/presentation/providers/saved_provider.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
@@ -62,79 +60,49 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen> {
     final displayReviewCount = userRating != null ? baseReviews + 1 : baseReviews;
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final hasPhone = place.phoneNumber != null && place.phoneNumber!.trim().isNotEmpty;
-    final imageUrl = place.primaryImageUrl;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Hero Sliver App Bar
+          // Clean Modern App Bar
           SliverAppBar(
-            expandedHeight: 280,
             pinned: true,
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.black45,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 20),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
+            elevation: 0,
+            scrolledUnderElevation: 1,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              place.name,
+              style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w700),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Builder(
-                  builder: (iconContext) => CircleAvatar(
-                    backgroundColor: Colors.black45,
-                    child: IconButton(
-                      icon: const Icon(Icons.share_rounded, color: Colors.white, size: 20),
-                      onPressed: () {
-                        final box = iconContext.findRenderObject() as RenderBox?;
-                        final origin = box != null ? box.localToGlobal(Offset.zero) & box.size : null;
-                        const NavigationService().sharePlace(place, sharePositionOrigin: origin);
-                      },
-                    ),
-                  ),
+              Builder(
+                builder: (iconContext) => IconButton(
+                  icon: const Icon(Icons.share_rounded),
+                  tooltip: 'Share place',
+                  onPressed: () {
+                    final box = iconContext.findRenderObject() as RenderBox?;
+                    final origin = box != null ? box.localToGlobal(Offset.zero) & box.size : null;
+                    const NavigationService().sharePlace(place, sharePositionOrigin: origin);
+                  },
                 ),
               ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (imageUrl.isNotEmpty)
-                    CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                      memCacheWidth: 800,
-                      placeholder: (_, _) => Container(color: AppColors.surfaceDarkVariant),
-                      errorWidget: (_, _, _) => CategoryIllustrationWidget(
-                        category: place.category,
-                        placeName: place.name,
-                        compact: false,
-                      ),
-                    )
-                  else
-                    CategoryIllustrationWidget(
-                      category: place.category,
-                      placeName: place.name,
-                      compact: false,
-                    ),
-                  // Dark Gradient Overlay at bottom of hero
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black87],
-                        stops: [0.6, 1.0],
-                      ),
-                    ),
-                  ),
-                ],
+              IconButton(
+                icon: Icon(
+                  isBookmarked ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  color: isBookmarked ? AppColors.heartRose : null,
+                ),
+                tooltip: isBookmarked ? 'Remove bookmark' : 'Bookmark place',
+                onPressed: () {
+                  ref.read(bookmarksProvider.notifier).toggle(place);
+                },
               ),
-            ),
+              const SizedBox(width: 4),
+            ],
           ),
 
           // Venue Content Details
@@ -154,12 +122,23 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen> {
                           color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text(
-                          place.category.name,
-                          style: AppTypography.labelMedium.copyWith(
-                            color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              place.category.icon,
+                              size: 15,
+                              color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              place.category.name,
+                              style: AppTypography.labelMedium.copyWith(
+                                color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       if (place.priceLevel != null)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_decorations.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -31,7 +30,6 @@ class SpotOfTheDayCard extends StatelessWidget {
 
     final rating = spot.rating ?? RatingHelper.generateRating(spot.id, spot.name, categoryId: spot.categoryId);
     final reviewCount = spot.reviewCount ?? RatingHelper.generateReviewCount(spot.id, spot.name);
-    final photoUrl = spot.primaryImageUrl;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,40 +51,13 @@ class SpotOfTheDayCard extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () => onTap(spot),
-            child: Stack(
-              children: [
-                // Real venue photo with elegant dark gradient overlay for optimal legibility
-                if (photoUrl.isNotEmpty) ...[
-                  Positioned.fill(
-                    child: CachedNetworkImage(
-                      imageUrl: photoUrl,
-                      fit: BoxFit.cover,
-                      errorWidget: (_, _, _) => const SizedBox.shrink(),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.40),
-                            Colors.black.withOpacity(0.85),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-
-                Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Badge Row
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Badge Row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -232,8 +203,6 @@ class SpotOfTheDayCard extends StatelessWidget {
                     ],
                   ),
                 ),
-              ],
-            ),
           ),
         ),
       ),

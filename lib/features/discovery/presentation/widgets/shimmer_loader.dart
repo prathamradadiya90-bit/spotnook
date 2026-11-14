@@ -66,36 +66,36 @@ class PlaceCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: AppDecorations.cardDecoration(context),
       child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ShimmerBox(
-            width: 100,
-            height: 100,
+            width: 44,
+            height: 44,
             borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
-          SizedBox(width: 14),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ShimmerBox(width: 80, height: 16),
-                SizedBox(height: 8),
-                ShimmerBox(width: 160, height: 18),
-                SizedBox(height: 8),
-                ShimmerBox(width: 120, height: 14),
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    ShimmerBox(width: 50, height: 20),
-                    SizedBox(width: 8),
-                    ShimmerBox(width: 60, height: 20),
-                  ],
-                ),
+                ShimmerBox(width: 140, height: 16),
+                SizedBox(height: 6),
+                ShimmerBox(width: 180, height: 13),
+                SizedBox(height: 6),
+                ShimmerBox(width: 110, height: 11),
               ],
             ),
+          ),
+          SizedBox(width: 8),
+          ShimmerBox(
+            width: 24,
+            height: 24,
+            borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ],
       ),

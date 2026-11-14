@@ -202,7 +202,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
-                      height: 232,
+                      height: 156,
                       child: nearbyPlacesAsync.when(
                         data: (places) {
                           if (places.isEmpty) {
@@ -230,8 +230,8 @@ class HomeScreen extends ConsumerWidget {
                           itemCount: 3,
                           separatorBuilder: (_, _) => const SizedBox(width: 14),
                           itemBuilder: (_, _) => const ShimmerBox(
-                            width: 240,
-                            height: 228,
+                            width: 230,
+                            height: 156,
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                         ),

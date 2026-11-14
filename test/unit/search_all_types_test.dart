@@ -1,20 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spot_finder/features/discovery/domain/entities/category.dart';
 import 'package:spot_finder/features/discovery/domain/entities/place.dart';
-import 'package:spot_finder/features/discovery/domain/entities/search_filter.dart';
-import 'package:spot_finder/features/discovery/data/datasources/places_cache_service.dart';
-import 'package:spot_finder/features/discovery/data/repositories/places_repository_impl.dart';
 
 void main() {
   group('Search All Types & Modalities Comprehensive Verification', () {
-    late PlacesRepositoryImpl repository;
-
-    setUp(() {
-      repository = PlacesRepositoryImpl(
-        cacheService: PlacesCacheService(),
-      );
-    });
-
     test('1. Every standard category in PlaceCategory is fully defined and queryable', () {
       final categories = PlaceCategory.standardCategories;
       expect(categories.length, greaterThanOrEqualTo(19));
