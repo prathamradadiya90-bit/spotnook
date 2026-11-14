@@ -129,3 +129,27 @@ This document provides a prioritized catalog of potential bugs, edge cases, tech
 | **In-App Update prompt (`in_app_update`)** | User Retention | Low-Medium | 1 hr | Medium |
 | **AGP 9 / Gradle 10 Built-in Kotlin cleanup** | Build System | Low | 1 hr | Low |
 | **Offline SQLite venue cache** | Offline Support | Low | 4 hrs | Medium |
+
+---
+
+## 6. Real Venue Photography & Multi-Tier Resolution (Completed & Verified)
+
+- **Status:** **Completed & Verified in Production Builds**
+- **Architecture:** Implemented `PlaceImageHelper` ([lib/core/utils/place_image_helper.dart](file:///d:/Downloads/scapper/lib/core/utils/place_image_helper.dart)):
+  1. **Tier 1:** Upstream verified photos from provider (Google Places / user-submitted).
+  2. **Tier 2:** OpenStreetMap direct tags (`image`, `image:0`, `photo`, and Wikimedia Commons `File:` / `Special:FilePath`).
+  3. **Tier 3:** High-resolution authentic real photography catalog (15+ categories: Cafe, Restaurant, Fast Food, Hotel, Resort, Gym, Park, Shopping, Bar, Cinema, Attraction, etc.) deterministically resolved per venue ID & name.
+- **Surface Coverage:**
+  - `PlaceCard` (Home list, Search results, Category views)
+  - `PlaceCompactCard` (Horizontal trending carousels & recently viewed)
+  - `SpotOfTheDayCard` (Featured daily discovery hero banner)
+  - `MapPreviewSheet` (Bottom sheet venue preview on interactive map)
+  - `PlaceDetailScreen` (Hero photo and multi-image photo gallery carousel)
+- **Verification:**
+  - 223/223 Unit Tests passed (`flutter test test/unit/`)
+  - 17/17 Widget Tests passed (`flutter test test/widget/`)
+  - User Journey Integration Test passed (`flutter test test/integration/user_journey_test.dart`)
+  - Live Browser Verified on Web (`http://127.0.0.1:8092/`)
+  - Release AAB (`Spotnook-v1.0.0.aab`) & Release APK (`Spotnook-v1.0.0.apk`) built and verified.
+
+

@@ -62,7 +62,7 @@ class _PlaceDetailScreenState extends ConsumerState<PlaceDetailScreen> {
     final displayReviewCount = userRating != null ? baseReviews + 1 : baseReviews;
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final hasPhone = place.phoneNumber != null && place.phoneNumber!.trim().isNotEmpty;
-    final imageUrl = place.photoUrls.isNotEmpty ? place.photoUrls.first : '';
+    final imageUrl = place.primaryImageUrl;
 
     return Scaffold(
       body: CustomScrollView(

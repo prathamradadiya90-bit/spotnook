@@ -41,7 +41,7 @@ class PlaceCompactCard extends ConsumerWidget {
     final displayReviewCount = userRating != null ? baseReviews + 1 : baseReviews;
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final useMiles = ref.watch(settingsProvider).useMiles;
-    final imageUrl = place.photoUrls.isNotEmpty ? place.photoUrls.first : '';
+    final imageUrl = place.primaryImageUrl;
 
     return Container(
       width: width,

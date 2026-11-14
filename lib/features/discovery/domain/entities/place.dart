@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../../../../core/utils/place_image_helper.dart';
 import 'category.dart';
 
 /// Core domain entity representing a discovered venue or point of interest.
@@ -47,6 +48,24 @@ class Place {
   });
 
   PlaceCategory get category => PlaceCategory.findById(categoryId);
+
+  /// Primary display real image URL for place cards and headers.
+  String get primaryImageUrl => PlaceImageHelper.getPrimaryImageUrl(
+        id: id,
+        name: name,
+        categoryId: categoryId,
+        photoUrls: photoUrls,
+        rawTags: rawTags,
+      );
+
+  /// Gallery real photo URLs for place details.
+  List<String> get galleryImageUrls => PlaceImageHelper.getGalleryImageUrls(
+        id: id,
+        name: name,
+        categoryId: categoryId,
+        photoUrls: photoUrls,
+        rawTags: rawTags,
+      );
 
   Place copyWith({
     String? id,

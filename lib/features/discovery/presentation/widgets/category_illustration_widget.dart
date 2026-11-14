@@ -120,7 +120,7 @@ class CategoryIllustrationWidget extends StatelessWidget {
                       ),
                     ),
                     if (!compact) ...[
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       Text(
                         category.name,
                         style: const TextStyle(
@@ -130,58 +130,10 @@ class CategoryIllustrationWidget extends StatelessWidget {
                           letterSpacing: 0.4,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2.5),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.35),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.20),
-                            width: 0.8,
-                          ),
-                        ),
-                        child: const Text(
-                          'Category Illustration',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 9.5,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                      ),
                     ],
                   ],
                 ),
               ),
-
-              // Bottom Right "Illustration" Badge (Compact mode)
-              if (compact)
-                Positioned(
-                  bottom: 6,
-                  right: 6,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.45),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.25),
-                        width: 0.6,
-                      ),
-                    ),
-                    child: const Text(
-                      'Illustration',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8.5,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ),
-                ),
             ],
           ),
         ),

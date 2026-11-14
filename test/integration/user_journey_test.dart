@@ -59,7 +59,8 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
     // 2. Validate place card is displayed with rating
     expect(find.text('Honest Roasters Cafe'), findsOneWidget);
@@ -78,7 +79,8 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
     // 4. Verify detail elements
     expect(find.text('Honest Roasters Cafe'), findsOneWidget);
@@ -88,7 +90,8 @@ void main() {
 
     // Tap Save button to bookmark the venue
     await tester.tap(find.text('Save'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
     // 5. Open Saved Screen and verify bookmarked venue appears
     await tester.pumpWidget(
@@ -101,7 +104,8 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
     // Verify Honest Roasters Cafe is present in saved bookmarks
     expect(find.text('Honest Roasters Cafe'), findsOneWidget);

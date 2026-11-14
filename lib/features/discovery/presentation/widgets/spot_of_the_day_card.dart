@@ -31,7 +31,7 @@ class SpotOfTheDayCard extends StatelessWidget {
 
     final rating = spot.rating ?? RatingHelper.generateRating(spot.id, spot.name, categoryId: spot.categoryId);
     final reviewCount = spot.reviewCount ?? RatingHelper.generateReviewCount(spot.id, spot.name);
-    final photoUrl = spot.photoUrls.isNotEmpty ? spot.photoUrls.first : null;
+    final photoUrl = spot.primaryImageUrl;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -55,18 +55,30 @@ class SpotOfTheDayCard extends StatelessWidget {
             onTap: () => onTap(spot),
             child: Stack(
               children: [
-                // Background Image with dark blend
-                if (photoUrl != null)
+                // Real venue photo with elegant dark gradient overlay for optimal legibility
+                if (photoUrl.isNotEmpty) ...[
                   Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.28,
-                      child: CachedNetworkImage(
-                        imageUrl: photoUrl,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, _, _) => const SizedBox.shrink(),
+                    child: CachedNetworkImage(
+                      imageUrl: photoUrl,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.40),
+                            Colors.black.withOpacity(0.85),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ],
 
                 Padding(
                   padding: const EdgeInsets.all(18),

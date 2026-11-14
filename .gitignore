@@ -49,6 +49,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Playwright artifacts
+.playwright-mcp/
+
+
 # Widget Preview related
 .widget_preview/
 

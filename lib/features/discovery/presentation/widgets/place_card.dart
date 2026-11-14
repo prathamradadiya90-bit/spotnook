@@ -40,7 +40,7 @@ class PlaceCard extends ConsumerWidget {
     final isBookmarked = bookmarks.any((p) => p.id == place.id);
     final useMiles = ref.watch(settingsProvider).useMiles;
 
-    final imageUrl = place.photoUrls.isNotEmpty ? place.photoUrls.first : '';
+    final imageUrl = place.primaryImageUrl;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
