@@ -28,18 +28,75 @@ void main() {
       expect(url, equals(osmImageUrl));
     });
 
-    test('3. Formats wikimedia_commons tag into valid FilePath URL', () {
-      final url = PlaceImageHelper.getPrimaryImageUrl(
-        id: 'place_wiki',
-        name: 'City Museum',
-        categoryId: 'attraction',
-        rawTags: {'wikimedia_commons': 'File:City_Museum_Main.jpg'},
+    test('3. Prioritizes brand matching over tags', () {
+      final domUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'place_brand',
+        name: "Domino's Pizza",
+        categoryId: 'fast_food',
+        rawTags: {'brand:wikipedia': "en:Domino's Pizza"},
       );
-
-      expect(url, contains('commons.wikimedia.org/wiki/Special:FilePath/City_Museum_Main.jpg'));
+      expect(domUrl, contains('photo-1590947132387-155cc02f3212'));
     });
 
-    test('4. Generates high-resolution real photography for all categories deterministically', () {
+    test('4. Resolves authentic original imagery for known brands and chains', () {
+      // Domino's Pizza must resolve to authentic pizza, NOT generic fast food
+      final dominosUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'dom_1',
+        name: "Domino's Pizza",
+        categoryId: 'fast_food',
+      );
+      expect(dominosUrl, contains('photo-1590947132387-155cc02f3212'));
+
+      // Cafe Coffee Day must resolve to authentic CCD photography
+      final ccdUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'ccd_1',
+        name: 'Cafe Coffee Day',
+        categoryId: 'cafe',
+      );
+      expect(ccdUrl, contains('upload.wikimedia.org/wikipedia/commons/c/c2/Cafe_coffee_day_cyber_hub_phase_3.jpg'));
+
+      // The Shake Maker must resolve to thickshake
+      final shakeUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'sm_1',
+        name: 'The Shake Maker',
+        categoryId: 'cafe',
+      );
+      expect(shakeUrl, contains('photo-1572490122747-3968b75cc699'));
+
+      // Simply South must resolve to authentic Masala Dosa
+      final southUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'ss_1',
+        name: 'Simply South',
+        categoryId: 'restaurant',
+      );
+      expect(southUrl, contains('photo-1668236543090-82eba5ee5976'));
+
+      // Gokulam Dairy must resolve to dairy & milk
+      final dairyUrl = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'gd_1',
+        name: 'Gokulam Dairy',
+        categoryId: 'shopping',
+      );
+      expect(dairyUrl, contains('photo-1528750997573-59b89d56f4f7'));
+    });
+
+    test('5. Resolves semantic specialty and cuisine keywords accurately', () {
+      final pizzaSpot = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'p_1',
+        name: 'Artisan Woodfired Pizza',
+        categoryId: 'restaurant',
+      );
+      expect(pizzaSpot, contains('photo-1513104890138-7c749659a591'));
+
+      final biryaniSpot = PlaceImageHelper.getPrimaryImageUrl(
+        id: 'b_1',
+        name: 'Royal Dum Biryani House',
+        categoryId: 'restaurant',
+      );
+      expect(biryaniSpot, contains('photo-1563379091339-03b21ab4a4f8'));
+    });
+
+    test('6. Generates high-resolution real photography for all categories deterministically', () {
       const categories = [
         'cafe',
         'restaurant',
@@ -80,7 +137,7 @@ void main() {
       }
     });
 
-    test('5. Place domain entity exposes primaryImageUrl seamlessly', () {
+    test('7. Place domain entity exposes primaryImageUrl seamlessly', () {
       const place = Place(
         id: 'p99',
         name: 'The Espresso House',
@@ -95,4 +152,3 @@ void main() {
     });
   });
 }
-

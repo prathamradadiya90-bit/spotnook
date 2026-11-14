@@ -255,6 +255,7 @@ class OverpassService {
         'bounded': 1,
         'limit': 25,
         'addressdetails': 1,
+        'extratags': 1,
       },
       options: Options(
         headers: {if (!kIsWeb) 'User-Agent': ApiConstants.appUserAgent},
@@ -357,6 +358,17 @@ class OverpassService {
     if (addressMap['takeaway'] == 'yes') amenities.add('Takeaway Available');
     if (addressMap['delivery'] == 'yes') amenities.add('Delivery Available');
 
+    final extratags = (item['extratags'] is Map)
+        ? Map<String, dynamic>.from(item['extratags'] as Map)
+        : <String, dynamic>{};
+    final combinedTags = <String, dynamic>{...addressMap, ...extratags};
+
+    final directPhotos = <String>[];
+    final imageTag = combinedTags['image'] ?? combinedTags['image:0'] ?? combinedTags['photo'];
+    if (imageTag is String && imageTag.startsWith('http')) {
+      directPhotos.add(imageTag);
+    }
+
     return Place(
       id: id,
       name: name,
@@ -372,11 +384,11 @@ class OverpassService {
       openingHours: openingHours,
       phoneNumber: phone,
       website: website,
-      photoUrls: const [],
+      photoUrls: directPhotos,
       attribution: 'Data © OpenStreetMap contributors, ODbL',
       sourceProvider: 'osm',
       amenities: amenities,
-      rawTags: addressMap,
+      rawTags: combinedTags,
     );
   }
 
@@ -735,6 +747,12 @@ class OverpassService {
         ? int.tryParse(tags['user_ratings_total']?.toString() ?? tags['reviews']?.toString() ?? '')
         : RatingHelper.generateReviewCount(id, name);
 
+    final directPhotos = <String>[];
+    final directImage = tags['image'] ?? tags['image:0'] ?? tags['photo'];
+    if (directImage is String && directImage.startsWith('http')) {
+      directPhotos.add(directImage);
+    }
+
     return Place(
       id: id,
       name: name,
@@ -750,7 +768,7 @@ class OverpassService {
       openingHours: openingHours,
       phoneNumber: phone,
       website: website,
-      photoUrls: const [],
+      photoUrls: directPhotos,
       attribution: '© OpenStreetMap contributors',
       sourceProvider: 'osm',
       amenities: amenities,
