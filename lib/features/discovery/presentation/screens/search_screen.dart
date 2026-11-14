@@ -32,12 +32,35 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _activeQuery = widget.initialQuery ?? '';
+    _activeQuery = (widget.initialQuery ?? '').trim();
     _controller = TextEditingController(text: _activeQuery);
+    _controller.addListener(_onControllerTextChanged);
+  }
+
+  void _onControllerTextChanged() {
+    // Rebuild to update the clear button visibility
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(SearchScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialQuery != oldWidget.initialQuery && widget.initialQuery != null) {
+      final newQuery = widget.initialQuery!.trim();
+      _controller.text = newQuery;
+      _debouncer.cancel();
+      setState(() {
+        _activeQuery = newQuery;
+      });
+      if (newQuery.isNotEmpty) {
+        ref.read(recentSearchesProvider.notifier).add(newQuery);
+      }
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_onControllerTextChanged);
     _controller.dispose();
     _debouncer.dispose();
     super.dispose();
@@ -153,7 +176,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               label: Text(cat.name, style: AppTypography.labelSmall),
               onPressed: () {
                 _controller.text = cat.name;
-                _onQueryChanged(cat.name);
+                _debouncer.cancel();
+                setState(() => _activeQuery = cat.name);
                 ref.read(recentSearchesProvider.notifier).add(cat.name);
               },
             );
@@ -190,7 +214,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
               onTap: () {
                 _controller.text = query;
-                _onQueryChanged(query);
+                _debouncer.cancel();
+                setState(() => _activeQuery = query);
               },
             );
           }),
