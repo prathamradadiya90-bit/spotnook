@@ -19,7 +19,7 @@ class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({
     super.key,
     this.controller,
-    this.hintText = 'Search cafes, restaurants, hotels...',
+    this.hintText = 'Search places, cafes, restaurants...',
     this.onChanged,
     this.onSubmitted,
     this.onClear,
@@ -101,42 +101,38 @@ class SearchBarWidget extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
-                if (onFilterTap != null) ...[
-                  Container(
-                    height: 20,
-                    width: 1,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
-                  ),
-                  InkWell(
-                    onTap: onFilterTap,
-                    borderRadius: BorderRadius.circular(16),
-                    child: Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Icon(
-                            Icons.tune_rounded,
-                            size: 20,
-                            color: hasActiveFilters
-                                ? (isDark ? AppColors.primaryLight : AppColors.primary)
-                                : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
-                          ),
-                        ),
-                        if (hasActiveFilters)
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: AppColors.accent,
-                              shape: BoxShape.circle,
+                if (onFilterTap != null)
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onFilterTap,
+                      borderRadius: BorderRadius.circular(20),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Icon(
+                              Icons.tune_rounded,
+                              size: 20,
+                              color: hasActiveFilters
+                                  ? (isDark ? AppColors.primaryLight : AppColors.primary)
+                                  : (isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight),
                             ),
-                          ),
-                      ],
+                            if (hasActiveFilters)
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.accent,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ],
               ],
             ),
           ),

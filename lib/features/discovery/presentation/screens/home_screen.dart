@@ -8,28 +8,18 @@ import '../providers/discovery_providers.dart';
 import '../providers/location_provider.dart';
 import '../widgets/ad_banner_widget.dart';
 import '../widgets/category_chip_group.dart';
-import '../widgets/explorer_progress_card.dart';
 import '../widgets/honest_state_widgets.dart';
-import '../widgets/mood_chip_group.dart';
 import '../widgets/place_card.dart';
 import '../widgets/place_compact_card.dart';
 import '../widgets/search_bar_widget.dart';
 import '../widgets/shimmer_loader.dart';
 import '../widgets/spot_of_the_day_card.dart';
-import '../widgets/surprise_me_modal.dart';
 import 'filter_bottom_sheet.dart';
 import 'location_picker_sheet.dart';
 
 /// Primary discovery & explore home screen.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
-
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,51 +43,49 @@ class HomeScreen extends ConsumerWidget {
               },
               child: CustomScrollView(
             slivers: [
-              // Top Bar: Greeting & Location Selector
+              // Clean Modern Top Bar: Title & Location Pill
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              _getGreeting(),
-                              style: AppTypography.bodySmall.copyWith(
-                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                                letterSpacing: 0.5,
+                              'Explore Spots',
+                              style: AppTypography.titleLarge.copyWith(
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.4,
+                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                               ),
                             ),
                             const SizedBox(height: 2),
-                            Row(
-                              children: [
-                                Text(
-                                  'Explore Spots',
-                                  style: AppTypography.titleLarge.copyWith(
-                                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Text('✨', style: TextStyle(fontSize: 18)),
-                              ],
+                            Text(
+                              'Discover great places around you',
+                              style: AppTypography.bodySmall.copyWith(
+                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Location Selector Chip
+                      // Clean Location Selector Pill
                       InkWell(
                         onTap: () => LocationPickerSheet.show(context),
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
                             color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.08),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.22),
+                              color: (isDark ? AppColors.primaryLight : AppColors.primary).withOpacity(0.2),
                             ),
                           ),
                           child: Row(
@@ -108,9 +96,9 @@ class HomeScreen extends ConsumerWidget {
                                 size: 16,
                                 color: isDark ? AppColors.primaryLight : AppColors.primary,
                               ),
-                              const SizedBox(width: 5),
+                              const SizedBox(width: 6),
                               ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 130),
+                                constraints: const BoxConstraints(maxWidth: 140),
                                 child: Text(
                                   locationState.location.name,
                                   style: AppTypography.labelMedium.copyWith(
@@ -121,57 +109,11 @@ class HomeScreen extends ConsumerWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(width: 2),
+                              const SizedBox(width: 4),
                               Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 size: 18,
                                 color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Surprise Me Decision Maker Button
-                      InkWell(
-                        onTap: () {
-                          final places = nearbyPlacesAsync.value ?? popularPlacesAsync.value ?? [];
-                          if (places.isNotEmpty) {
-                            SurpriseMeModal.show(
-                              context,
-                              places: places,
-                              onSelectPlace: (place) {
-                                context.push('/place/${place.id}', extra: place);
-                              },
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Loading spots to pick from...')),
-                            );
-                          }
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: AppColors.accent.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: AppColors.accent.withOpacity(0.35),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('🎲', style: TextStyle(fontSize: 13)),
-                              const SizedBox(width: 5),
-                              Text(
-                                'Spin',
-                                style: TextStyle(
-                                  color: isDark ? AppColors.accentLight : AppColors.accent,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 12,
-                                ),
                               ),
                             ],
                           ),
@@ -188,7 +130,7 @@ class HomeScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                   child: SearchBarWidget(
                     readOnly: true,
-                    hintText: 'Search cafes, restaurants, hotels in ${locationState.location.name}...',
+                    hintText: 'Search places in ${locationState.location.name}...',
                     onTap: () => context.push('/search'),
                     onFilterTap: () => FilterBottomSheet.show(context),
                   ),
@@ -205,18 +147,7 @@ class HomeScreen extends ConsumerWidget {
                   },
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 12)),
-
-              // Mood & Vibe Quick Selectors
-              SliverToBoxAdapter(
-                child: MoodChipGroup(
-                  selectedMoodId: ref.watch(selectedMoodProvider),
-                  onMoodSelected: (moodId) {
-                    ref.read(selectedMoodProvider.notifier).state = moodId;
-                  },
-                ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 18)),
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
               // Daily Discovery "Spot of the Day"
               popularPlacesAsync.when(
@@ -233,15 +164,7 @@ class HomeScreen extends ConsumerWidget {
                 loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 error: (_, _) => const SliverToBoxAdapter(child: SizedBox.shrink()),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 18)),
-
-              // City Explorer Gamified Level Card
-              SliverToBoxAdapter(
-                child: ExplorerProgressCard(
-                  onTap: () => context.go('/saved'),
-                ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 22)),
+              const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
               // Nearby Discovery Horizontal Carousel
               SliverToBoxAdapter(
